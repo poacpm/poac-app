@@ -1,4 +1,4 @@
-package com.example.poac_app;
+package pm.poac.poac;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

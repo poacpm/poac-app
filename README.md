@@ -1,4 +1,6 @@
-# poac_app
+# poac
+
+[![Build Status](https://app.bitrise.io/app/1b7d73b5128132d2/status.svg?token=hhmoWHDuH1n6RdVw7GLqfg&branch=master)](https://app.bitrise.io/app/1b7d73b5128132d2)
 
 A new Flutter project.
 
