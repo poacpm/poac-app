@@ -11,13 +11,10 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   AlgoliaIndexReference packagesRef = Config.algolia.instance.index('packages');
   List packages = new List();
-
   String _searchText = "";
   Icon _searchIcon = new Icon(Icons.search);
-
   final TextEditingController _filter = new TextEditingController();
   Widget _appBarTitle = new Text('Package Searcher');
-
 
   _HomeState() {
     _filter.addListener(() {
@@ -34,6 +31,17 @@ class _HomeState extends State<Home> {
     super.initState();
   }
 
+  void _getPackages() async {
+    AlgoliaQuerySnapshot snap = await packagesRef.search(this._searchText).getObjects();
+    List tempList = new List();
+    for (int i = 0; i < snap.hits.length; i++) {
+      tempList.add(snap.hits[i].data);
+    }
+    setState(() {
+      packages = tempList;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,49 +51,7 @@ class _HomeState extends State<Home> {
         },
         body: _buildList(),
       ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            Container(
-              height: 80.0,
-              child: DrawerHeader(
-                child: Text('poac', style: TextStyle(fontFamily: 'VarelaRound')),
-                decoration: BoxDecoration(color: Colors.white),
-                margin: const EdgeInsets.all(0.0),
-                padding: const EdgeInsets.fromLTRB(16.0, 20.0, 16.0, 0.0),
-              ),
-            ),
-            Divider(color: Colors.black),
-            ListTile(
-              title: Row(
-                children: <Widget>[
-                  Icon(Icons.person_outline, color: Colors.blueGrey),
-                  Container(margin: const EdgeInsets.only(left: 20.0)),
-                  Text('Account', style: TextStyle(color: Colors.blueGrey)),
-                ],
-              ),
-              onTap: () {
-                // Update the state of the app
-                // Then close the drawer
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: Row(
-                children: <Widget>[
-                  Icon(Icons.settings, color: Colors.blueGrey),
-                  Container(margin: const EdgeInsets.only(left: 20.0)),
-                  Text('Settings', style: TextStyle(color: Colors.blueGrey)),
-                ],
-              ),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        ),
-      ),
+      drawer: _buildDrawer(),
     );
   }
 
@@ -103,6 +69,25 @@ class _HomeState extends State<Home> {
         ),
       ],
     );
+  }
+
+  void _searchPressed() {
+    setState(() {
+      if (this._searchIcon.icon == Icons.search) {
+        this._searchIcon = new Icon(Icons.close);
+        this._appBarTitle = new TextField(
+          controller: _filter,
+          decoration: new InputDecoration(
+              prefixIcon: new Icon(Icons.search),
+              hintText: 'Search packages'
+          ),
+        );
+      } else {
+        this._searchIcon = new Icon(Icons.search);
+        this._appBarTitle = new Text('Package Searcher');
+        _filter.clear();
+      }
+    });
   }
 
   Widget _buildList() {
@@ -128,33 +113,42 @@ class _HomeState extends State<Home> {
     );
   }
 
-  void _searchPressed() {
-    setState(() {
-      if (this._searchIcon.icon == Icons.search) {
-        this._searchIcon = new Icon(Icons.close);
-        this._appBarTitle = new TextField(
-          controller: _filter,
-          decoration: new InputDecoration(
-              prefixIcon: new Icon(Icons.search),
-              hintText: 'Search packages'
+  Widget _buildDrawer() {
+    return new Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: <Widget>[
+          Container(
+            height: 80.0,
+            child: DrawerHeader(
+              child: Text('poac', style: TextStyle(fontFamily: 'VarelaRound')),
+              decoration: BoxDecoration(color: Colors.white),
+              margin: const EdgeInsets.all(0.0),
+              padding: const EdgeInsets.fromLTRB(20.0, 20.0, 16.0, 0.0),
+            ),
           ),
-        );
-      } else {
-        this._searchIcon = new Icon(Icons.search);
-        this._appBarTitle = new Text('Package Searcher');
-        _filter.clear();
-      }
-    });
+          Divider(color: Colors.black),
+          _buildDrawerMenu(Icons.person_outline, 'Account'),
+          _buildDrawerMenu(Icons.settings, 'Settings'),
+        ],
+      ),
+    );
   }
 
-  void _getPackages() async {
-    AlgoliaQuerySnapshot snap = await packagesRef.search(this._searchText).getObjects();
-    List tempList = new List();
-    for (int i = 0; i < snap.hits.length; i++) {
-      tempList.add(snap.hits[i].data);
-    }
-    setState(() {
-      packages = tempList;
-    });
+  Widget _buildDrawerMenu(IconData icon, String name) {
+    return new ListTile(
+      title: Row(
+        children: <Widget>[
+          Icon(icon, color: Colors.blueGrey),
+          Container(margin: const EdgeInsets.only(left: 20.0)),
+          Text(name, style: TextStyle(color: Colors.blueGrey)),
+        ],
+      ),
+      onTap: () {
+        // Update the state of the app
+        // Then close the drawer
+        Navigator.pop(context);
+      },
+    );
   }
 }
