@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:poac/pages/detail/user.dart';
 
 class Package extends StatelessWidget {
   final Map<String, dynamic> _package;
@@ -50,6 +51,14 @@ class Package extends StatelessWidget {
               backgroundColor: Colors.transparent,
           ),
           title: Text(_package['owners'][index]),
+          onTap: () {
+            // Update the state of the app
+            // Then close the drawer
+            Navigator.push(context, new MaterialPageRoute<Null>(
+              settings: const RouteSettings(name: "/user"),
+              builder: (BuildContext context) => new User(_package['owners'][index])
+            ));
+          },
         );
       },
       shrinkWrap: true,
