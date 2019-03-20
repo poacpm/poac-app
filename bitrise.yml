@@ -25,6 +25,10 @@ workflows:
         inputs:
         - destination: "$ANDROID_HOME/licenses/android-sdk-license"
         - source: "$BITRISEIO_ANDROID_SDK_LICENSE_URL"
+    - file-downloader@1.0.1:
+        inputs:
+        - destination: "$BITRISE_FLUTTER_PROJECT_LOCATION/android/app/google-services.json"
+        - source: "$BITRISEIO_GOOGLE_SERVISES_URL"
     - flutter-build@0.9.2:
         inputs:
         - platform: android
