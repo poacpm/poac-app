@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:algolia/algolia.dart';
-import 'package:poac/detail.dart';
+import 'package:poac/pack.dart';
 
 void main() => runApp(MyApp());
 
@@ -89,8 +89,8 @@ class _MyHomePageState extends State<MyHomePage> {
           trailing: Text(packages[index]['version']),
           onTap: () {
             Navigator.push(context, new MaterialPageRoute<Null>(
-                settings: const RouteSettings(name: "/detail"),
-                builder: (BuildContext context) => new Detail(packages[index])
+                settings: const RouteSettings(name: "/pack"),
+                builder: (BuildContext context) => new Pack(packages[index])
             ));
           },
         );
