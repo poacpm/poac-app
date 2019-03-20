@@ -8,13 +8,16 @@ class User extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        appBar: AppBar(
-          title: Text(_userId),
-        ),
-        body: ListView(children: [
+      appBar: AppBar(
+        title: Text(_userId),
+      ),
+      body: ListView(
+        children: [
           Container(
-              margin: const EdgeInsets.all(16.0),
-              child: Text(_userId)),
-        ]));
+            margin: const EdgeInsets.all(16.0),
+            child: Text(_userId)),
+        ]
+      )
+    );
   }
 }
