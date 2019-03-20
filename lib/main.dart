@@ -11,6 +11,8 @@ class MyApp extends StatelessWidget {
       title: 'poac',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        canvasColor: Colors.white,
+        fontFamily: 'Lato',
       ),
       home: Home(),
     );

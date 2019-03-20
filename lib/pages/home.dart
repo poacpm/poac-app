@@ -47,22 +47,26 @@ class _HomeState extends State<Home> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            DrawerHeader(
-              child: Text('poac'),
-              decoration: BoxDecoration(
-                color: Colors.blue,
+            Container(
+              height: 80.0,
+              child: DrawerHeader(
+                child: Text('poac', style: TextStyle(fontFamily: 'VarelaRound')),
+                decoration: BoxDecoration(color: Colors.white),
+                margin: const EdgeInsets.all(0.0),
+                padding: const EdgeInsets.fromLTRB(16.0, 20.0, 16.0, 0.0),
               ),
             ),
+            Divider(color: Colors.black),
             ListTile(
               title: Row(
                 children: <Widget>[
-                  Icon(Icons.people),
-                  Text('Account'),
+                  Icon(Icons.person_outline, color: Colors.blueGrey),
+                  Container(margin: const EdgeInsets.only(left: 20.0)),
+                  Text('Account', style: TextStyle(color: Colors.blueGrey)),
                 ],
               ),
               onTap: () {
                 // Update the state of the app
-                // ...
                 // Then close the drawer
                 Navigator.pop(context);
               },
@@ -70,8 +74,9 @@ class _HomeState extends State<Home> {
             ListTile(
               title: Row(
                 children: <Widget>[
-                  Icon(Icons.settings),
-                  Text('Settings'),
+                  Icon(Icons.settings, color: Colors.blueGrey),
+                  Container(margin: const EdgeInsets.only(left: 20.0)),
+                  Text('Settings', style: TextStyle(color: Colors.blueGrey)),
                 ],
               ),
               onTap: () {
