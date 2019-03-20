@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class Pack extends StatelessWidget {
+class Package extends StatelessWidget {
   final Map<String, dynamic> _package;
 
-  Pack(this._package);
+  Package(this._package);
 
   @override
   Widget build(BuildContext context) {

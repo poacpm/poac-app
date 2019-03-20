@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:algolia/algolia.dart';
-import 'package:poac/pack.dart';
+import 'package:poac/pages/detail/package.dart';
+import 'package:poac/config.dart';
 
 class Home extends StatefulWidget {
-  Home() : super();
-
   @override
   _HomeState createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-  AlgoliaIndexReference packagesRef = Application.algolia.instance.index('packages');
+  AlgoliaIndexReference packagesRef = Config.algolia.instance.index('packages');
   List packages = new List();
 
   String _searchText = "";
@@ -38,12 +37,50 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: NestedScrollView(
-          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-            return <Widget>[ _buildBar(context) ];
-          },
-          body: _buildList(),
-        )
+      body: NestedScrollView(
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return <Widget>[ _buildBar(context) ];
+        },
+        body: _buildList(),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              child: Text('poac'),
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+            ),
+            ListTile(
+              title: Row(
+                children: <Widget>[
+                  Icon(Icons.people),
+                  Text('Account'),
+                ],
+              ),
+              onTap: () {
+                // Update the state of the app
+                // ...
+                // Then close the drawer
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: Row(
+                children: <Widget>[
+                  Icon(Icons.settings),
+                  Text('Settings'),
+                ],
+              ),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -77,8 +114,8 @@ class _HomeState extends State<Home> {
           trailing: Text(packages[index]['version']),
           onTap: () {
             Navigator.push(context, new MaterialPageRoute<Null>(
-                settings: const RouteSettings(name: "/pack"),
-                builder: (BuildContext context) => new Pack(packages[index])
+                settings: const RouteSettings(name: "/package"),
+                builder: (BuildContext context) => new Package(packages[index])
             ));
           },
         );
@@ -115,11 +152,4 @@ class _HomeState extends State<Home> {
       packages = tempList;
     });
   }
-}
-
-class Application {
-  static final Algolia algolia = Algolia.init(
-    applicationId: 'IOCVK5FECM',
-    apiKey: '9c0a76bacf692daa9e8eca2aaff4b2ab',
-  );
 }
