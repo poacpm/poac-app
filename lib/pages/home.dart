@@ -76,10 +76,12 @@ class _HomeState extends State<Home> {
       if (this._searchIcon.icon == Icons.search) {
         this._searchIcon = new Icon(Icons.close);
         this._appBarTitle = new TextField(
+          cursorColor: Colors.white,
           controller: _filter,
           decoration: new InputDecoration(
-              prefixIcon: new Icon(Icons.search),
-              hintText: 'Search packages'
+            border: InputBorder.none,
+            hintText: 'Search packages',
+            hintStyle: TextStyle(color: Colors.white70),
           ),
         );
       } else {
