@@ -78,10 +78,12 @@ class _HomeState extends State<Home> {
         this._appBarTitle = new TextField(
           cursorColor: Colors.white,
           controller: _filter,
+          style: TextStyle(color: Colors.white),
           decoration: new InputDecoration(
             border: InputBorder.none,
             hintText: 'Search packages',
             hintStyle: TextStyle(color: Colors.white70),
+            labelStyle: TextStyle(color: Colors.white70),
           ),
         );
       } else {
