@@ -25,7 +25,10 @@ class Pack extends StatelessWidget {
             child: Text(_package['description'])),
           Container(
             margin: const EdgeInsets.all(16.0),
-            child: Text(_package.containsKey('license') ? _package['license'] : 'none')),
+            child: Text(
+                _package.containsKey('license') ? _package['license'] : 'none'
+            )
+          ),
           Container(
             margin: const EdgeInsets.all(16.0),
             child: _buildOwners(),
@@ -38,13 +41,13 @@ class Pack extends StatelessWidget {
       itemCount: _package['owners'].length,
       itemBuilder: (BuildContext context, int index) {
         return new ListTile(
-          leading: Container( // CircleAvatar(child: Image.asset('')) // そのユーザidのアイコン
-              width: 10.0,
-              height: 10.0,
-              decoration: new BoxDecoration(
-                color: Colors.black,
-                shape: BoxShape.circle,
-              )
+          leading: CircleAvatar(
+              radius: 15.0,
+              backgroundImage:
+                NetworkImage(
+                  'https://avatars2.githubusercontent.com/u/26405363?v=4' // そのユーザidのアイコン
+                ),
+              backgroundColor: Colors.transparent,
           ),
           title: Text(_package['owners'][index]),
         );
