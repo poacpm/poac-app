@@ -45,7 +45,7 @@ class Package extends StatelessWidget {
           leading: CircleAvatar(
               radius: 15.0,
               backgroundImage:
-                NetworkImage(
+                const NetworkImage(
                   'https://avatars2.githubusercontent.com/u/26405363?v=4' // そのユーザidのアイコン
                 ),
               backgroundColor: Colors.transparent,
