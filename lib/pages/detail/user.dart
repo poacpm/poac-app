@@ -15,7 +15,8 @@ class User extends StatelessWidget {
         children: [
           Container(
             margin: const EdgeInsets.all(16.0),
-            child: Text(_userId)),
+            child: Text(_userId),
+          ),
         ]
       )
     );
