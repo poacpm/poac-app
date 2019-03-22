@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 import 'package:poac/pages/home.dart';
 
 void main() => runApp(MyApp());
@@ -19,6 +21,9 @@ class MyApp extends StatelessWidget {
       900: const Color(0xFFFFFFFF),
     },
   );
+  static FirebaseAnalytics analytics = FirebaseAnalytics();
+  static FirebaseAnalyticsObserver observer =
+      FirebaseAnalyticsObserver(analytics: analytics);
 
   // This widget is the root of your application.
   @override
@@ -31,6 +36,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Lato',
       ),
       home: Home(),
+      navigatorObservers: [observer],
     );
   }
 }
