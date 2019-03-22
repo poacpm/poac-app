@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:algolia/algolia.dart';
-import 'package:poac/pages/detail/package.dart';
+
 import 'package:poac/config.dart';
+import 'package:poac/pages/detail/package.dart';
+import 'package:poac/pages/drawers/account.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -10,11 +12,11 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   AlgoliaIndexReference packagesRef = Config.algolia.instance.index('packages');
-  List packages = new List();
+  List packages = List();
   String _searchText = "";
-  Icon _searchIcon = new Icon(Icons.search);
+  Icon _searchIcon = Icon(Icons.search);
   final TextEditingController _filter = new TextEditingController();
-  Widget _appBarTitle = new Text('Package Searcher');
+  Widget _appBarTitle = Text('poac', style: TextStyle(fontFamily: 'VarelaRound'));
 
   _HomeState() {
     _filter.addListener(() {
@@ -27,18 +29,41 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
-    this._getPackages();
+    _getPackages();
     super.initState();
   }
 
   void _getPackages() async {
-    AlgoliaQuerySnapshot snap = await packagesRef.search(this._searchText).getObjects();
-    List tempList = new List();
+    AlgoliaQuerySnapshot snap = await packagesRef.search(_searchText).getObjects();
+    List tempList = List();
     for (int i = 0; i < snap.hits.length; i++) {
       tempList.add(snap.hits[i].data);
     }
     setState(() {
       packages = tempList;
+    });
+  }
+
+  void _setAppBar() {
+    setState(() {
+      if (_searchIcon.icon == Icons.search) {
+        _searchIcon = Icon(Icons.close);
+        _appBarTitle = TextField(
+          cursorColor: Colors.black,
+          controller: _filter,
+          style: TextStyle(color: Colors.black),
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            hintText: 'Search packages',
+            hintStyle: TextStyle(color: Colors.black54),
+            labelStyle: TextStyle(color: Colors.black54),
+          ),
+        );
+      } else {
+        _searchIcon = Icon(Icons.search);
+        _appBarTitle = Text('poac', style: TextStyle(fontFamily: 'VarelaRound'));
+        _filter.clear();
+      }
     });
   }
 
@@ -56,42 +81,20 @@ class _HomeState extends State<Home> {
   }
 
   Widget _buildBar(BuildContext context) {
-    return new SliverAppBar(
-      floating: true,
-      pinned: false,
-      snap: true,
+    return SliverAppBar(
+      floating: false,
+      pinned: true,
+      snap: false,
       centerTitle: true,
+      elevation: 5.0,
       title: _appBarTitle,
       actions: <Widget>[
         IconButton(
           icon: _searchIcon,
-          onPressed: _searchPressed,
+          onPressed: _setAppBar,
         ),
       ],
     );
-  }
-
-  void _searchPressed() {
-    setState(() {
-      if (this._searchIcon.icon == Icons.search) {
-        this._searchIcon = new Icon(Icons.close);
-        this._appBarTitle = new TextField(
-          cursorColor: Colors.white,
-          controller: _filter,
-          style: TextStyle(color: Colors.white),
-          decoration: new InputDecoration(
-            border: InputBorder.none,
-            hintText: 'Search packages',
-            hintStyle: TextStyle(color: Colors.white70),
-            labelStyle: TextStyle(color: Colors.white70),
-          ),
-        );
-      } else {
-        this._searchIcon = new Icon(Icons.search);
-        this._appBarTitle = new Text('Package Searcher');
-        _filter.clear();
-      }
-    });
   }
 
   Widget _buildList() {
@@ -99,7 +102,10 @@ class _HomeState extends State<Home> {
       itemCount: packages.length,
       itemBuilder: (BuildContext context, int index) {
         return new ListTile(
-          contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 8.0
+          ),
           title: Text(packages[index]['name']),
           subtitle: Text(
             packages[index]['description'],
@@ -107,7 +113,7 @@ class _HomeState extends State<Home> {
           ),
           trailing: Text(packages[index]['version']),
           onTap: () {
-            Navigator.push(context, new MaterialPageRoute<Null>(
+            Navigator.push(context, new MaterialPageRoute(
                 settings: const RouteSettings(name: "/package"),
                 builder: (BuildContext context) => new Package(packages[index])
             ));
@@ -124,34 +130,41 @@ class _HomeState extends State<Home> {
         children: <Widget>[
           Container(
             height: 80.0,
-            child: DrawerHeader(
-              child: Text('poac', style: TextStyle(fontFamily: 'VarelaRound')),
-              decoration: BoxDecoration(color: Colors.white),
+            child: const DrawerHeader(
+              child: const Text(
+                  'poac', style: TextStyle(fontFamily: 'VarelaRound')
+              ),
+              decoration: const BoxDecoration(color: Colors.white),
               margin: const EdgeInsets.all(0.0),
               padding: const EdgeInsets.fromLTRB(20.0, 20.0, 16.0, 0.0),
             ),
           ),
-          Divider(color: Colors.black),
-          _buildDrawerMenu(Icons.person_outline, 'Account'),
-          _buildDrawerMenu(Icons.settings, 'Settings'),
+          const Divider(color: Colors.black),
+          _buildDrawerMenu(Icons.person, 'Account', Account()),
+          _buildDrawerMenu(Icons.settings, 'Settings', Account()),
+          _buildDrawerMenu(Icons.feedback, 'Send a feedback', Account()),
         ],
       ),
     );
   }
 
-  Widget _buildDrawerMenu(IconData icon, String name) {
+  Widget _buildDrawerMenu<T extends Widget>(IconData icon, String name, T obj) {
     return new ListTile(
       title: Row(
         children: <Widget>[
           Icon(icon, color: Colors.blueGrey),
           Container(margin: const EdgeInsets.only(left: 20.0)),
-          Text(name, style: TextStyle(color: Colors.blueGrey)),
+          Text(name, style: const TextStyle(color: Colors.blueGrey)),
         ],
       ),
       onTap: () {
         // Update the state of the app
         // Then close the drawer
         Navigator.pop(context);
+        Navigator.push(context, new MaterialPageRoute(
+            settings: RouteSettings(name: '/' + name.toLowerCase()),
+            builder: (BuildContext context) => obj
+        ));
       },
     );
   }
